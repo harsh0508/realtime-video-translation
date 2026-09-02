@@ -1,0 +1,42 @@
+language:
+
+  source: en
+
+  target: hi
+
+
+video:
+
+  width: 1280
+
+  height: 720
+
+  fps: 30
+
+
+queues:
+
+  video_capacity: 30
+
+  audio_capacity: 100
+
+
+speech:
+
+  asr: whisper
+
+  translation: indictrans2
+
+  tts: xtts
+
+
+lipsync:
+
+  model: musetalk
+
+
+network:
+
+  speech_port: 50051
+
+  lipsync_port: 50052

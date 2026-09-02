@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package media;
+
+
+message StreamMetadata
+{
+    uint64 stream_id = 1;
+
+    int64 timestamp_us = 2;
+
+    uint64 sequence_number = 3;
+}
+
+
+message AudioChunk
+{
+    StreamMetadata metadata = 1;
+
+    bytes audio_data = 2;
+}
+
+
+message VideoFrame
+{
+    StreamMetadata metadata = 1;
+
+    uint32 width = 2;
+
+    uint32 height = 3;
+
+    bytes frame_data = 4;
+}
+
+
+message TranslationRequest
+{
+    AudioChunk audio = 1;
+
+    string source_language = 2;
+
+    string target_language = 3;
+}
+
+
+message TranslatedAudio
+{
+    StreamMetadata metadata = 1;
+
+    string original_text = 2;
+
+    string translated_text = 3;
+
+    bytes audio_data = 4;
+}
+
+
+message LipSyncRequest
+{
+    VideoFrame frame = 1;
+
+    TranslatedAudio audio = 2;
+}
+
+
+message LipSyncResponse
+{
+    VideoFrame frame = 1;
+}
+
+
+service SpeechService
+{
+    rpc TranslateSpeech(
+        TranslationRequest
+    )
+    returns (
+        TranslatedAudio
+    );
+}
+
+
+service LipSyncService
+{
+    rpc ProcessFrame(
+        LipSyncRequest
+    )
+    returns (
+        LipSyncResponse
+    );
+}
