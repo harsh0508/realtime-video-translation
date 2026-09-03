@@ -1,22 +1,27 @@
 #include <iostream>
+#include <Server.hpp>
 
-#include "stream_manager.hpp"
+
+/* 
+
+    Planning c++ backend service to receive video steam
+    1. Make a backend endpoint
+
+
+
+
+*/
+/*
+    Make a server class and initiaze the server with the endpoint
+
+
+*/
+
+
 
 int main()
-{
-    std::cout << "=====================================\n";
-    std::cout << " Real-Time Video Translation Engine\n";
-    std::cout << "=====================================\n";
-
-    media::StreamManager manager;
-
-    auto stream_id = manager.create_stream();
-
-    std::cout << "\nCreated stream ID: "
-              << stream_id
-              << '\n';
-
-    std::cout << "\nMedia engine started successfully.\n";
+{   
+    Server server("0.0.0.0" , 8080);
 
     return 0;
 }
