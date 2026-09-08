@@ -1,3 +1,9 @@
+# Running 
+
+ cmake -S . -B build   
+ cmake --build build -j
+
+
 # Real-Time Video Translation + Lip Sync
 
 Goal:

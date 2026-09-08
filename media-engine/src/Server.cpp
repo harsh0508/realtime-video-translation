@@ -171,6 +171,7 @@ namespace socketServer{
                 {
                     auto id = next_stream_id.fetch_add(1);
                     auto ws = std::make_shared<Session>(std::move(socket), id);
+                    std::cout << "New connection accepted. Stream ID: " << id << std::endl;
                     ws->start();
                 }
                 else{
