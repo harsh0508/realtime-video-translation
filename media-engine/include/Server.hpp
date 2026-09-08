@@ -18,44 +18,42 @@ namespace socketServer{
     namespace net = boost::asio;            
     namespace beast = boost::beast;         
     namespace websocket = boost::beast::websocket; 
-    using tcp = net::ip::tcp;           
+    using tcp = net::ip::tcp;
+    
+    class Session : public std::enable_shared_from_this<Session>
+    {
+    private:
+        websocket::stream<tcp::socket> ws;
+        beast::flat_buffer buffer;
+
+        std::uint64_t stream_id;
+
+        void read();
+
+        void handle_video_chunk(std::vector<std::uint8_t> data);
+
+    public:
+        Session(tcp::socket socket, std::uint64_t id);
+
+        void start();
+    };
+
 
     struct Server{
 
         net::io_context io_context;
         tcp::acceptor acceptor;
+        std::atomic<std::uint64_t> next_stream_id{1};
 
-        Server(const std::string& host, unsigned short port)
-            : acceptor(io_context, tcp::endpoint(net::ip::make_address(host), port))
-        {}
 
-        void Start(){}
-        void Stop(){}
+        Server(const std::string& host, unsigned short port);
+
+        void start();
+        void stop();
 
 
         private:
-            void accept(){
-                acceptor.async_accept(
-                    [this](beast::error_code ec, tcp::socket socket){
-                        if(!ec){
-                            auto ws = std::make_shared<websocket::stream<tcp::socket>>(std::move(socket));
-                            ws->async_accept(
-                                [this, ws](beast::error_code ec){
-                                    if(!ec){
-                                        std::cout << "New WebSocket connection accepted\n";
-                                        // Handle the WebSocket connection here
-                                    } else {
-                                        std::cerr << "WebSocket accept error: " << ec.message() << "\n";
-                                    }
-                                }
-                            );
-                        }
-                        accept();
-                    }
-                );
-            }
-    }; 
-    
-
+            void accept();
+    };
 }
 
