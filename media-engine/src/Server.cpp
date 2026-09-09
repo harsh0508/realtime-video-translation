@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include "mlClient.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
@@ -20,9 +21,10 @@ namespace socketServer{
     */
 
 
-    Session::Session(tcp::socket socket, std::uint64_t id)
+    Session::Session(tcp::socket socket, std::uint64_t id, MLClient& ml_client)
         : ws(std::move(socket)),
-        stream_id(id)
+        stream_id(id),
+        client(ml_client)
     {
     }
     void Session::start()
@@ -130,14 +132,14 @@ namespace socketServer{
             << " bytes\n";
 
 
-        // DON'T run heavy ML here.
-        //
-        // Later:
-        //
-        // ml_queue.push({
-        //     stream_id,
-        //     std::move(data)
-        // });
+        
+
+
+        // auto audio = 
+        // this->extract_audio_from_video(data);
+        // auto translated_audio = 
+        // this->translate_audio(audio);
+
     }
 
     /*
@@ -169,13 +171,13 @@ namespace socketServer{
             {
                 if (!ec)
                 {
+                    auto ml_client = MLClient(io_context);
                     auto id = next_stream_id.fetch_add(1);
-                    auto ws = std::make_shared<Session>(std::move(socket), id);
+                    auto ws = std::make_shared<Session>(std::move(socket), id, ml_client);
                     std::cout << "New connection accepted. Stream ID: " << id << std::endl;
                     ws->start();
                 }
                 else{
-                    
                     std::cerr
                         << "Accept error: "
                         << ec.message()

@@ -8,23 +8,6 @@ const ws = new WebSocket(SERVER_URL);
 ws.on("open", () => {
     console.log("Connected to C++ video server");
 
-    /*
-        macOS AVFoundation:
-        "0:none"
-         ↑
-         camera[0]
-
-        FFmpeg:
-        Camera
-          ↓
-        H264 encode
-          ↓
-        MPEG-TS
-          ↓
-        stdout
-          ↓
-        WebSocket
-    */
 
     const ffmpeg = spawn("ffmpeg", [
         "-f", "avfoundation",

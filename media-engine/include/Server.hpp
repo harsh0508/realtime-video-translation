@@ -10,6 +10,7 @@
 #include <shared_mutex>
 #include <string>
 #include <thread>
+#include "mlClient.hpp"
 
 
 namespace socketServer{
@@ -25,6 +26,7 @@ namespace socketServer{
     private:
         websocket::stream<tcp::socket> ws;
         beast::flat_buffer buffer;
+        MLClient& client;
 
         std::uint64_t stream_id;
 
@@ -32,8 +34,12 @@ namespace socketServer{
 
         void handle_video_chunk(std::vector<std::uint8_t> data);
 
+        void extract_audio_from_video(std::vector<std::uint8_t> video_data);
+
+        void translate_audio(std::vector<std::uint8_t> audio_data);
+
     public:
-        Session(tcp::socket socket, std::uint64_t id);
+        Session(tcp::socket socket, std::uint64_t id , MLClient& ml_client);
 
         void start();
     };
